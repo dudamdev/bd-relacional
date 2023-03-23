@@ -19,7 +19,7 @@ ORDER BY id DESC
 if ($received_data->action == 'insert') {
     $data = array(
         ':first_name' => $received_data->firstName,
-        ':last_name' => $received_data->lastName,
+        ':last_name' => $received_data->lastName
     );
 
     $query = "
@@ -48,7 +48,7 @@ WHERE id = '" . $received_data->id ."'
 
     $statement->execute();
 
-    $result = $statement-fetchAll();
+    $result = $statement->fetchAll();
 
     foreach ($result as $row) {
         $data['id'] = $row['id'];
