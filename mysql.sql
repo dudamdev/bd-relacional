@@ -1,3 +1,6 @@
+
+USE fatec;
+
 CREATE TABLE Pets (
 	id int PRIMARY KEY AUTO_INCREMENT,
   	nome varchar(60) not null,
@@ -195,3 +198,55 @@ SELECT Animais.nome, Animais.peso, Especies.nome
     on Especies.id = Animais.especie_id
     WHERE Animais.peso > 70 AND
     Especies.nome = "baleia" or Especies.nome = "sardinha" or Especies.nome = "bacalhau" or Especies.nome = "tubarão" or Especies.nome = "lambari" or Especies.nome = "corvina"
+
+-- Selecione todos os herbívoro ordenados pelos mais pesados
+SELECT a.nome "Nome do animal", a.peso "Peso", e.alimentacao "Alimentação"
+    FROM Animais a LEFT JOIN Especies e
+        ON a.especie_id = e.id
+	WHERE e.alimentacao = 'herbívoro'
+	ORDER BY a.peso DESC;
+
+
+-- Selecione todos os carnívoro que são pretos e brancos
+SELECT a.nome "Nome do animal", a.cor "Cor", e.alimentacao "Alimentação"
+    FROM Animais a LEFT JOIN Especies e
+        ON a.especie_id = e.id
+	WHERE e.alimentacao = 'carnívoro'
+    AND (a.cor LIKE 'branc%' OR a.cor LIKE 'pret%');
+    -- AND a.cor IN ('branco', 'branca', 'preto', 'preta'); -- alternativa
+
+
+-- Selecione todos os onívoros que nasceram antes de 2013
+SELECT a.nome "Nome do animal", a.data_nasc "Data de nascimento", e.alimentacao "Alimentação"
+    FROM Animais a LEFT JOIN Especies e
+        ON a.especie_id = e.id
+	WHERE e.alimentacao = 'onívoro'
+    AND YEAR(a.data_nasc) < 2013; -- mysql e sqlserver
+    -- AND a.data_nasc < '2013-01-01'; -- alternativa
+    -- AND EXTRACT(YEAR FROM a.data_nasc) < 2013; -- postgresql
+
+
+-- Selecione todos os mamiferos que pesam mais que 10 quilos e são marrons ou azul
+SELECT a.nome "Nome do animal", a.peso "Peso", a.cor "Cor", e.nome "Espécie"
+    FROM Animais a LEFT JOIN Especies e
+        ON a.especie_id = e.id
+	WHERE (e.nome = 'gato'
+        OR e.nome = 'cachorro'
+        OR e.nome = 'morcego'
+        OR e.nome = 'rato'
+        OR e.nome = 'ramister'
+        OR e.nome = 'baleia')
+    AND a.peso > 10
+    AND (a.cor = 'azul'
+        OR a.cor = 'marrom');
+
+
+-- (Desafio) Selecione a quantidade total de animais
+SELECT COUNT(*) AS Total FROM Animais;
+
+
+-- (Desafio) Se somarmos os peso de todos os gatos, qual será o resultado?
+SELECT SUM(a.peso) AS Total 
+    FROM Animais a LEFT JOIN Especies e
+        ON a.especie_id = e.id
+    WHERE e.nome = 'gato';
